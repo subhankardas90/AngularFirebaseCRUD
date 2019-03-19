@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>
+    {{title}}
+  </h1>
+   
+  <div mat-dialog-content>
+    <p>{{message}}</p>
+  </div>
+   
+  <div mat-dialog-actions>
+      <span style="padding-left:68px;"></span><button class="waves-effect waves-red btn col s8" (click)="onDismiss()">No</button>
+      <span style="padding-left:10px;"></span><button class="waves-effect waves-purple btn col s8" (click)="onConfirm()">Yes</button>
+  </div>

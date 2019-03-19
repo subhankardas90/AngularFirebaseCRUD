@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from "@angular/forms";
 import { OrdersService } from "../shared/orders.service";
+import { MatDialog } from '@angular/material';
+import { ConfirmDialogModel, ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-orders',
@@ -9,7 +11,7 @@ import { OrdersService } from "../shared/orders.service";
 })
 export class OrdersComponent implements OnInit {
 
-  constructor(private orderService: OrdersService) { }
+  constructor(private orderService: OrdersService, public dialog: MatDialog) { }
 
   ngOnInit() {
   }
@@ -34,14 +36,30 @@ export class OrdersComponent implements OnInit {
     let index = this.coffeeOrder.indexOf(coffee);
     if(index>-1) this.coffeeOrder.splice(index,1);
   }
-  
+
   onSubmit(){
-    this.orderService.form.value.coffeeOrder = this.coffeeOrder;
-    let data = this.orderService.form.value;
+    const message = `Are you sure you want to Submit the Coffee Order?`;
+ 
+    const dialogData = new ConfirmDialogModel("Please Confirm", message);
 
-    this.orderService.createCoffeeOrder(data).then(res=>{
-      console.log("Order Successful");
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      height: '300px',
+      width: '300px',
+      data: dialogData
     });
-  }
 
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if(dialogResult){
+        this.orderService.form.value.coffeeOrder = this.coffeeOrder;
+        let data = this.orderService.form.value;
+    
+        this.orderService.createCoffeeOrder(data).then(res=>{
+          console.log("Order Successful");
+        });
+      }
+    });
+
+
+  }
+ 
 }
